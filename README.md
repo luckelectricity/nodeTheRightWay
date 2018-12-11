@@ -42,3 +42,10 @@ spawn() 返回的对象是`ChildProcess`. 他的
 
 
 ***
+
+## 用EventEmitter 获取数据
+
+`on()`方法用于给指定事件添加事件监听函数.
+
+[nodejs的流](http://nodejs.cn/api/stream.html#stream_organization_of_this_document)
+***

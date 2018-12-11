@@ -5,6 +5,7 @@
 ```
 fs.watch(fileName,callback)
 ```
+******
 
 ### **process.argv**
 
@@ -29,6 +30,8 @@ $ node process-args.js one two=three four
 3: two=three
 4: four
 ```
+*****
+
 ## 创建子进程
 [Child Process模块](http://nodejs.cn/api/child_process.html#child_process_child_process_spawn_command_args_options)
 
@@ -36,3 +39,6 @@ spawn() 返回的对象是`ChildProcess`. 他的
 1. `stdin`  ---->   标准输入
 2. `stdout` ---->   标准输出
 3. `stdin`  ---->   标准输入
+
+
+***

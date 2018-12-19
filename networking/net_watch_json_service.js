@@ -11,7 +11,7 @@ net.createServer(connection => {
   console.log('创建一个net server');
   connection.write(JSON.stringify({name:'luckelectricity',age:'18'}) + '\n')
   const watcher = fs.watch(fileName, () => {
-    connection.write(JSON.stringify({tyepe: 'changed', timestamp: Date.now()}) + "\n")
+    connection.write(JSON.stringify({type: 'changed', timestamp: Date.now()}) + "\n")
   })
   connection.on('close', () => {
     console.log('监听完毕');

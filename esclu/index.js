@@ -15,6 +15,16 @@ const fullUrl = (path = "") => {
   return url + path.replace(/^\/*/, "");
 };
 
+const handleResponse = (err, res, body) => {
+  console.log(res);
+  if (program.json) {
+    console.log(JSON.stringify(err || body));
+  } else {
+    if (err) throw err;
+    console.log(body);
+  }
+};
+
 program
   .version(pkg.version)
   .description(pkg.description)
@@ -30,6 +40,30 @@ program
   .description("geberate the URL for the options and path (default is /)")
   .action((path = "/") => {
     console.log(fullUrl(path));
+  });
+
+program
+  .command("get [path]")
+  .description("this is http request for path(default is /)")
+  .action((path = "/") => {
+    const options = {
+      url: fullUrl(path),
+      json: program.json
+    };
+    request(options, handleResponse);
+  });
+
+program
+  .command("create-index")
+  .description("create an index")
+  .action(() => {
+    if (!program.index) {
+      const msg = "No index specified! Use --index <name>";
+      if (!program.json) throw Error(msg);
+      console.log(JSON.stringify({ error: msg }));
+      return;
+    }
+    request.put(fullUrl(), handleResponse);
   });
 
 program.parse(process.argv);

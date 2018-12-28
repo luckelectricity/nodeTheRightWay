@@ -24,6 +24,9 @@ const handleResponse = (err, res, body) => {
     console.log(body);
   }
 };
+function bbb() {
+  console.log('bbb');
+}
 
 program
   .version(pkg.version)
@@ -50,7 +53,9 @@ program
       url: fullUrl(path),
       json: program.json
     };
-    request(options, handleResponse);
+    // request(options, handleResponse);
+    console.log('aaa');
+    bbb()
   });
 
 program
@@ -66,6 +71,14 @@ program
     request.put(fullUrl(), handleResponse);
   });
 
+program
+  .command('list-indices')
+  .alias('li')
+  .description('get a list of indices in this cluster')
+  .action(() => {
+    const path = program.json ? '_all' : '_cat/indices?v'
+    request({ url: fullUrl(path), json: program.json }, handleResponse)
+  })
 program.parse(process.argv);
 
 if (!program.args.filter(arg => typeof arg === "object").lenght) {

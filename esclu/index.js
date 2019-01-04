@@ -3,7 +3,7 @@ const fs = require("fs");
 const program = require("commander");
 const request = require("request");
 const pkg = require("./package.json");
-
+// const async = require('async')
 const fullUrl = (path = "") => {
   let url = `http://${program.host}:${program.port}/`;
   if (program.index) {
@@ -16,7 +16,6 @@ const fullUrl = (path = "") => {
 };
 
 const handleResponse = (err, res, body) => {
-  console.log(res);
   if (program.json) {
     console.log(JSON.stringify(err || body));
   } else {
@@ -24,9 +23,6 @@ const handleResponse = (err, res, body) => {
     console.log(body);
   }
 };
-function bbb() {
-  console.log('bbb');
-}
 
 program
   .version(pkg.version)
@@ -53,9 +49,7 @@ program
       url: fullUrl(path),
       json: program.json
     };
-    // request(options, handleResponse);
-    console.log('aaa');
-    bbb()
+    request(options, handleResponse);
   });
 
 program
@@ -81,6 +75,6 @@ program
   })
 program.parse(process.argv);
 
-if (!program.args.filter(arg => typeof arg === "object").lenght) {
+if (!program.args.filter(arg => typeof arg === "object").length) {
   program.help();
 }

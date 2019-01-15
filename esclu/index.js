@@ -28,11 +28,12 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .usage("[options]<command>[...]")
-  .option("-o, --host <hostname>", "hostname [localhost]", "localhost")
-  .option("-p, --port <number>", "port number [9200]", "9200")
-  .option("-j, --json", "format output as JSON")
-  .option("-i, --index <name>", "which index to use")
-  .option("-t, --type <type>", "批量操作的默认类型");
+  .option("-o, --host <hostname>", "主机名 [localhost]", "localhost")
+  .option("-p, --port <number>", "端口号 [9200]", "9200")
+  .option("-j, --json", "格式输出为JSON")
+  .option("-i, --index <name>", "使用的索引")
+  .option("-t, --type <type>", "批量操作的默认类型")
+  .option("-f, --fillter <fillter>", "查询结果过滤");
 
 program
   .command("url [path]")
@@ -102,6 +103,25 @@ program
       req.pipe(process.stdout);
     });
   });
+
+program
+  .command("query [queries...]")
+  .alias("q")
+  .description("执行elasticsearch查询")
+  .action((queries = []) => {
+    const options = {
+      url: fullUrl('_search'),
+      json: program.json,
+      qs: {}
+    }
+    if(queries && queries.length){
+      options.qs.q = queries.json(' ')
+    }
+    if(program.fillter){
+      options.qs._source = program.fillter
+    }
+    request(options, handleResponse)
+  })
 
 program.parse(process.argv);
 

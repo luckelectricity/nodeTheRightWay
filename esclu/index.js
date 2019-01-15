@@ -32,18 +32,18 @@ program
   .option("-p, --port <number>", "port number [9200]", "9200")
   .option("-j, --json", "format output as JSON")
   .option("-i, --index <name>", "which index to use")
-  .option("-t, --type <type>", "default type for bulk operations");
+  .option("-t, --type <type>", "批量操作的默认类型");
 
 program
   .command("url [path]")
-  .description("geberate the URL for the options and path (default is /)")
+  .description("生成选项和路径的URL(default is /)")
   .action((path = "/") => {
     console.log(fullUrl(path));
   });
 
 program
   .command("get [path]")
-  .description("this is http request for path(default is /)")
+  .description("http请求的路径(default is /)")
   .action((path = "/") => {
     const options = {
       url: fullUrl(path),
@@ -54,7 +54,7 @@ program
 
 program
   .command("create-index")
-  .description("create an index")
+  .description("创建一个索引")
   .action(() => {
     if (!program.index) {
       const msg = "No index specified! Use --index <name>";
@@ -66,13 +66,43 @@ program
   });
 
 program
-  .command('list-indices')
-  .alias('li')
-  .description('get a list of indices in this cluster')
+  .command("list-indices")
+  .alias("li")
+  .description("获取此群集中的索引列表")
   .action(() => {
-    const path = program.json ? '_all' : '_cat/indices?v'
-    request({ url: fullUrl(path), json: program.json }, handleResponse)
-  })
+    const path = program.json ? "_all" : "_cat/indices?v";
+    request({ url: fullUrl(path), json: program.json }, handleResponse);
+  });
+
+program
+  .command("bulk <file>")
+  .description("从指定的文件执行批量选项")
+  .action(file => {
+    fs.stat(file, (err, stats) => {
+      if (err) {
+        if (program.json) {
+          console.log(JSON.stringify(err));
+          return;
+        }
+        throw err;
+      }
+      const options = {
+        url: fullUrl("_bulk"),
+        json: true,
+        headers: {
+          "contenr-length": stats.size,
+          "content-type": "application/json"
+        }
+      };
+      const req = request.post(options);
+
+      const stream = fs.createReadStream(file);
+
+      stream.pipe(req);
+      req.pipe(process.stdout);
+    });
+  });
+
 program.parse(process.argv);
 
 if (!program.args.filter(arg => typeof arg === "object").length) {

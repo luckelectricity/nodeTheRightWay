@@ -38,7 +38,7 @@ $ node process-args.js one two=three four
 spawn() 返回的对象是`ChildProcess`. 他的
 1. `stdin`  ---->   标准输入
 2. `stdout` ---->   标准输出
-3. `stdin`  ---->   标准输入
+3. `stderr`  ---->   标准错误
 
 
 ***
@@ -49,4 +49,3 @@ spawn() 返回的对象是`ChildProcess`. 他的
 
 [nodejs的流](http://nodejs.cn/api/stream.html#stream_organization_of_this_document)
 ***
-

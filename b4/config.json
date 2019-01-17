@@ -1,0 +1,9 @@
+{
+  "prot": 60702,
+  "es": {
+    "host": "localhost",
+    "prot": 9200,
+    "books_index": "books",
+    "bundles_index": "b4"
+  }
+}

@@ -68,7 +68,7 @@ module.exports = (app, es) => {
     //   .catch(({ error }) => {
     //     res.status(error.status || 502).json(error);
     //   });
-    rp.get(options)
+    rp(options)
       .then(esResBody => {
         // console.log(esResBody);
         res.status(200).json(esResBody.suggest.suggestions);

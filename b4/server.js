@@ -18,6 +18,7 @@ app.get("/api/version", (req, res) => {
 });
 
 require("./lib/search.js")(app, nconf.get("es"));
+require("./lib/bundle.js")(app, nconf.get("es"));
 
 app.listen(nconf.get("prot"), () => {
   console.log("监听端口" + nconf.get("prot"));

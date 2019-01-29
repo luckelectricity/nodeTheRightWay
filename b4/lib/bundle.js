@@ -103,36 +103,30 @@ module.exports = (app, es) => {
     }
   });
 
-  // app.delete("/api/bundle/:id/book/:pgid", async (req, res) => {
-  //   const bundleUrl = `${url}/${req.params.id}`;
-  //   const bookUrl = `http://${es.host}:${es.prot}/${es.books_index}/book/${
-  //     req.params.pgid
-  //   }`;
-  //   try {
-  //     // const [bundleRes, bookRes] = await Promise.all([
-
-  //     //   rp({ url: bookUrl, json: true })
-  //     // ]);
-  //     const bundleRes = await rp({ url: bundleUrl, json: true });
-  //     const { _source: bundle, _version: version } = bundleRes;
-  //     console.log(bundle);
-  //     // const { _source: book } = bookRes;
-  //     const idx = bundle.books.findIndex(book => book.id === req.params.pgid);
-  //     console.log(idx);
-  //     if (idx === -1) {
-  //       console.log(123123123);
-  //     } else {
-  //       bundle.books.splice(idx, 1);
-  //       const esResBody = await rp.delete({
-  //         url: bookUrl,
-  //         qs: { version },
-  //         body: bundle,
-  //         json: true
-  //       });
-  //       res.status(200).json(esResBody);
-  //     }
-  //   } catch (error) {
-  //     res.status(error.statusCode || 502).json(error.error);
-  //   }
-  // });
+  app.delete("/api/bundle/:id/book/:pgid", async (req, res) => {
+    const bundleUrl = `${url}/${req.params.id}`;
+    try {
+      const bundleRes = await rp({ url: bundleUrl, json: true });
+      const { _source: bundle, _version: version } = bundleRes;
+      const idx = bundle.books.findIndex(book => book.id === req.params.pgid);
+      if (idx === -1) {
+        throw {
+          statusCode: 409,
+          error: {
+            reason: "Conflict - Bundle does not contain that book."
+          }
+        };
+      }
+      bundle.books.splice(idx, 1);
+      const esResBody = await rp.put({
+        url: bundleUrl,
+        qs: { version },
+        body: bundle,
+        json: true
+      });
+      res.status(200).json(esResBody);
+    } catch (error) {
+      res.status(error.statusCode || 502).json(error.error);
+    }
+  });
 };

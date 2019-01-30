@@ -113,7 +113,7 @@ module.exports = (app, es) => {
         throw {
           statusCode: 409,
           error: {
-            reason: "Conflict - Bundle does not contain that book."
+            reason: "没有找到这本书"
           }
         };
       }

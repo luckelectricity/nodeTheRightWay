@@ -49,3 +49,8 @@ spawn() 返回的对象是`ChildProcess`. 他的
 
 [nodejs的流](http://nodejs.cn/api/stream.html#stream_organization_of_this_document)
 ***
+
+```
+learn js
+
+```
